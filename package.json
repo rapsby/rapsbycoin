@@ -1,0 +1,20 @@
+{
+  "name": "rapsbycoin",
+  "version": "1.0.0",
+  "description": "rapsbycoint made in Node.JS",
+  "main": "src/server.js",
+  "repository": "https://github.com/rapsby/rapsbycoin",
+  "author": "rapsby <gsu5022@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "crypto-js": "^3.1.9-1",
+    "express": "^4.16.3",
+    "morgan": "^1.9.0",
+    "ws": "^5.1.1"
+  },
+  "scripts": {
+    "dev": "nodemon src/server.js"
+  }
+}

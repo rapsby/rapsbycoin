@@ -1,2 +1,2 @@
 # rapsbycoin
-rapsbycoin made in Node.JS
+rapsbycoint made in Node.JS
