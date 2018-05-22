@@ -118,5 +118,4 @@ module.exports = {
     getBlockchain,
     createNewBlock
 };
-//sdfg
 
