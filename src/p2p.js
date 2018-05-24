@@ -1,7 +1,7 @@
 const WebSockets = require("ws"),
 Blockchain = require("./blockchain");
 
-const {getLastBlock, isBlockStructureValid} = Blockchain;
+const {getNewestBlock, isBlockStructureValid, replaceChain} = Blockchain;
 
 const sockets = [];
 
@@ -89,6 +89,19 @@ const handleBlockchainResponse = receivedBlocks => {
     if(!isBlockStructureValid(latestBlockReceived)){
         console.log("The block structure of the block received is not valid");
         return;
+    }
+    const newestBlock = getNewestBlock();
+    if(latestBlockReceived.index > newestBlock.index){
+        // 하나만 뒤쳐진 경우
+        if(newestBlock.hash === latestBlockReceived.previousHash){
+            addBlockToChain(latestBlockReceived);
+        }
+        // 많은 양의 블록이 뒤쳐진 경우
+        else if(receivedBlocks.length === 1){
+            // to do, get all the blocks, we are way behind
+        } else {
+            replaceChain(receivedBlocks);
+        }
     }
 }
 
