@@ -1,7 +1,7 @@
 const WebSockets = require("ws"),
 Blockchain = require("./blockchain");
 
-const {getNewestBlock, isBlockStructureValid, replaceChain} = Blockchain;
+const {getNewestBlock, isBlockStructureValid, replaceChain, getBlockchain, addBlockToChain} = Blockchain;
 
 const sockets = [];
 
@@ -69,6 +69,9 @@ const handleSocketMessages = ws => {
             case GET_LATEST:
                 sendMessage(ws, responseLatest());
                 break;
+                case GET_ALL:
+                sendMessage(ws, responseAll());
+                break;
             case BLOCKCHAIN_RESPONSE:
                 const receivedBlocks = message.data;
                 if(receivedBlocks === null){
@@ -99,6 +102,8 @@ const handleBlockchainResponse = receivedBlocks => {
         // 많은 양의 블록이 뒤쳐진 경우
         else if(receivedBlocks.length === 1){
             // to do, get all the blocks, we are way behind
+            sendMessageToAll(getAll());
+
         } else {
             replaceChain(receivedBlocks);
         }
@@ -107,13 +112,16 @@ const handleBlockchainResponse = receivedBlocks => {
 
 const sendMessage = (ws, message) => ws.send(JSON.stringify(message));
 
-const responseLatest = () => blockchainResponse([getLastBlock()]);
+const sendMessageToAll = message => sockets.forEach(ws => sendMessage(ws, message));
 
+const responseLatest = () => blockchainResponse([getNewestBlock()]);
+
+const responseAll = () => blockchainResponse(getBlockchain());
 
 const handleSocketError = ws => {
     const closeSocketConnection = ws => {
         ws.close();
-        scokets.splice(sockets.indexOf(ws), 1);
+        sockets.splice(sockets.indexOf(ws), 1);
     };
     ws.on("close", () => closeSocketConnection(ws));
     ws.on("error", () => closeSocketConnection(ws));
